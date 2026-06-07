@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S-LAB — Aula · Criação de Landing Pages</title>
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+      --font-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+      --primary: #F08113;
+      --primary-light: #F8A23B;
+      --primary-dark: #E94D1D;
+      --primary-dim: rgba(240, 129, 19, 0.10);
+      --primary-glow: rgba(240, 129, 19, 0.22);
+      --gradient: linear-gradient(135deg, #F8A23B 0%, #F08113 60%, #E94D1D 100%);
+
+      --bg: #FFF4E8;
+      --surface: #FAF7F2;
+      --card: #FAF7F2;
+      --border: #EDE0CF;
+      --border-hover: #F08113;
+
+      --text: #1A1614;
+      --text-mid: #3D3530;
+      --muted: #87807A;
+      --error: #E94D1D;
+      --nav-bg: #1A1614;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-text);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(240, 129, 19, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240, 129, 19, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* Orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: rgba(248, 162, 59, 0.10);
+      top: -120px;
+      right: -150px;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: rgba(233, 77, 29, 0.06);
+      bottom: -100px;
+      left: -100px;
+    }
+
+    .orb-3 {
+      width: 280px;
+      height: 280px;
+      background: rgba(240, 129, 19, 0.07);
+      top: 50%;
+      left: 40%;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo-img {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-logo-sep {
+      width: 1px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-logo-label {
+      font-family: var(--font-text);
+      font-weight: 300;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.06em;
+    }
+
+    .nav-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 100px;
+      background: rgba(240, 129, 19, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(240, 129, 19, 0.30);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Layout */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* Header */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-dim);
+      border: 1px solid rgba(240, 129, 19, 0.28);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--primary);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 5.5vw, 48px);
+      font-weight: 300;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    h1 strong {
+      font-weight: 700;
+    }
+
+    .gradient-text {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 44px;
+      line-height: 1.8;
+      background: var(--surface);
+      border-left: 3px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .subtitle em {
+      font-style: italic;
+      color: var(--text-mid);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 36px;
+    }
+
+    /* Progress */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 28px;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: color .3s;
+    }
+
+    .progress-step.active {
+      color: var(--primary);
+    }
+
+    .progress-step.done {
+      color: var(--primary);
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      transition: all .3s;
+    }
+
+    .progress-step.active .step-num,
+    .progress-step.done .step-num {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .progress-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      transition: background .5s;
+    }
+
+    .progress-line.filled {
+      background: var(--primary);
+    }
+
+    /* Step Card */
+    .step-card {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 1px 4px rgba(26, 22, 20, 0.05), 0 6px 20px rgba(26, 22, 20, 0.04);
+      animation: fadeUp .4s ease;
+    }
+
+    .step-card.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.65;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 22px;
+    }
+
+    /* Fields */
+    .field {
+      margin-bottom: 22px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+    }
+
+    .field label span {
+      color: var(--error);
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-family: var(--font-text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #b5a99f;
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2387807A' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.65;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    input.error,
+    select.error,
+    textarea.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(233, 77, 29, 0.12);
+    }
+
+    .field-error {
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 5px;
+      display: none;
+    }
+
+    .field-error.show {
+      display: block;
+    }
+
+    /* Feeling chips (large — radio) */
+    .feeling-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feeling-chip input {
+      display: none;
+    }
+
+    .feeling-chip label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all .18s;
+      line-height: 1.45;
+    }
+
+    .feeling-chip label .emoji {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .feeling-chip input:checked+label {
+      border-color: var(--primary);
+      background: var(--primary-dim);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .feeling-chip label:hover {
+      border-color: var(--primary-light);
+      background: rgba(248, 162, 59, 0.06);
+    }
+
+    /* Radio chips (small) */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip input {
+      display: none;
+    }
+
+    .chip label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s;
+      margin: 0;
+    }
+
+    .chip input:checked+label {
+      border-color: var(--primary);
+      background: var(--primary-dim);
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .chip label:hover {
+      border-color: var(--primary-light);
+      color: var(--text-mid);
+      background: rgba(248, 162, 59, 0.06);
+    }
+
+    /* Conditional sub-field */
+    .conditional-field {
+      display: none;
+      margin-top: 14px;
+      padding: 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .conditional-field.show {
+      display: block;
+    }
+
+    .conditional-field .field-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-mid);
+      margin-bottom: 10px;
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 24px;
+      border-radius: 8px;
+      font-family: var(--font-text);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px var(--primary-glow);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      filter: brightness(1);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: #c4b4a5;
+      color: var(--text-mid);
+      background: var(--surface);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    .btn-icon {
+      font-size: 16px;
+    }
+
+    /* Success */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 56px 36px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(26, 22, 20, 0.05), 0 8px 28px rgba(26, 22, 20, 0.04);
+      animation: fadeUp .45s ease;
+    }
+
+    .success-screen.show {
+      display: block;
+    }
+
+    .success-icon {
+      width: 76px;
+      height: 76px;
+      background: var(--primary-dim);
+      border: 2px solid rgba(240, 129, 19, 0.30);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 24px;
+    }
+
+    .success-screen h2 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .success-screen p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .success-screen strong {
+      color: var(--primary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: #b5a99f;
+      letter-spacing: 0.04em;
+    }
+
+    /* Responsive */
+    @media (max-width: 540px) {
+      .page {
+        padding: 36px 16px 80px;
+      }
+
+      .step-card {
+        padding: 22px 16px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .btn-row {
+        flex-direction: column-reverse;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .navbar {
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="images/logo.svg" alt="S-LAB" class="nav-logo-img" />
+      <div class="nav-logo-sep"></div>
+      <span class="nav-logo-label">Criação de Landing Pages</span>
+    </div>
+    <span class="nav-tag">Inscrição</span>
+  </nav>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="page">
+
+    <!-- Header -->
+    <div>
+      <div class="badge"><span class="badge-dot"></span>Aula · Criação de Landing Pages</div>
+      <h1><strong class="gradient-text">Landing Pages</strong><br>na Prática</h1>
+      <p class="subtitle">
+        <em>Preencha com atenção — leva 4 minutos e nos ajuda a preparar uma aula feita sob medida para o seu
+          momento.</em>
+      </p>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-step active" id="ps1">
+        <div class="step-num">1</div><span>Você</span>
+      </div>
+      <div class="progress-line" id="pl1"></div>
+      <div class="progress-step" id="ps2">
+        <div class="step-num">2</div><span>Seu Momento</span>
+      </div>
+      <div class="progress-line" id="pl2"></div>
+      <div class="progress-step" id="ps3">
+        <div class="step-num">3</div><span>Ferramentas</span>
+      </div>
+      <div class="progress-line" id="pl3"></div>
+      <div class="progress-step" id="ps4">
+        <div class="step-num">4</div><span>Expectativas</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: Quem é você -->
+    <div class="step-card active" id="step1">
+      <div class="step-label">Parte 1 de 4</div>
+      <div class="step-title">Quem é você</div>
+      <div class="step-desc">Informações básicas para entendermos com quem estamos falando.</div>
+
+      <div class="field">
+        <label for="nome">Nome completo <span>*</span></label>
+        <input type="text" id="nome" placeholder="Seu nome completo" />
+        <div class="field-error" id="e-nome">Informe seu nome completo.</div>
+      </div>
+
+      <div class="field">
+        <label for="whatsapp">WhatsApp <span>*</span></label>
+        <input type="tel" id="whatsapp" placeholder="(00) 00000-0000" />
+        <div class="field-error" id="e-whatsapp">Informe seu WhatsApp.</div>
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail <span>*</span></label>
+        <input type="email" id="email" placeholder="seu@email.com" />
+        <div class="field-error" id="e-email">Informe um e-mail válido.</div>
+      </div>
+
+      <div class="field">
+        <label>Idade <span>*</span></label>
+        <div class="chip-group">
+          <div class="chip"><input type="radio" name="idade" id="id1" value="Menos de 25 anos" /><label for="id1">Menos
+              de 25 anos</label></div>
+          <div class="chip"><input type="radio" name="idade" id="id2" value="25 a 34 anos" /><label for="id2">25 a 34
+              anos</label></div>
+          <div class="chip"><input type="radio" name="idade" id="id3" value="35 a 44 anos" /><label for="id3">35 a 44
+              anos</label></div>
+          <div class="chip"><input type="radio" name="idade" id="id4" value="45 a 54 anos" /><label for="id4">45 a 54
+              anos</label></div>
+          <div class="chip"><input type="radio" name="idade" id="id5" value="55 anos ou mais" /><label for="id5">55 anos
+              ou mais</label></div>
+        </div>
+        <div class="field-error" id="e-idade">Selecione sua faixa etária.</div>
+      </div>
+
+      <div class="field">
+        <label>Sexo <span>*</span></label>
+        <div class="chip-group">
+          <div class="chip"><input type="radio" name="sexo" id="sx1" value="Feminino" /><label
+              for="sx1">Feminino</label></div>
+          <div class="chip"><input type="radio" name="sexo" id="sx2" value="Masculino" /><label
+              for="sx2">Masculino</label></div>
+          <div class="chip"><input type="radio" name="sexo" id="sx3" value="Prefiro não informar" /><label
+              for="sx3">Prefiro não informar</label></div>
+        </div>
+        <div class="field-error" id="e-sexo">Selecione uma opção.</div>
+      </div>
+
+      <div class="field">
+        <label for="profissao">Qual é a sua profissão ou área de atuação? <span>*</span></label>
+        <input type="text" id="profissao" placeholder="Ex: fisioterapeuta, nutricionista, coach de saúde..." />
+        <div class="field-error" id="e-profissao">Informe sua profissão ou área de atuação.</div>
+      </div>
+
+      <div class="btn-row">
+        <span></span>
+        <button class="btn btn-primary" onclick="goTo(2)">Continuar <span class="btn-icon">→</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 2: O seu momento com Páginas de Venda -->
+    <div class="step-card" id="step2">
+      <div class="step-label">Parte 2 de 4</div>
+      <div class="step-title">Seu momento com Sites</div>
+      <div class="step-desc">Queremos entender sua necessidade e maturidade digital atual.</div>
+
+      <div class="field">
+        <label>Você já possui um site ou landing page hoje? <span>*</span></label>
+        <div class="feeling-group">
+          <div class="feeling-chip">
+            <input type="radio" name="tem_site" id="site1" value="Sim, tenho uma página que funciona bem" />
+            <label for="site1">Sim, tenho uma página que funciona bem</label>
+          </div>
+          <div class="feeling-chip">
+            <input type="radio" name="tem_site" id="site2" value="Sim, mas é antiga, feia ou não converte vendas" />
+            <label for="site2">Sim, mas é antiga, feia ou não converte vendas</label>
+          </div>
+          <div class="feeling-chip">
+            <input type="radio" name="tem_site" id="site3" value="Não, já tentei criar mas desisti/achei difícil" />
+            <label for="site3">Não, já tentei criar mas desisti/achei difícil</label>
+          </div>
+          <div class="feeling-chip">
+            <input type="radio" name="tem_site" id="site4" value="Não, estou começando do absoluto zero" />
+            <label for="site4">Não, estou começando do absoluto zero</label>
+          </div>
+        </div>
+        <div class="field-error" id="e-tem_site">Selecione uma opção.</div>
+      </div>
+
+      <div class="field">
+        <label>Qual é o seu nível de facilidade com tecnologia e ferramentas? <span>*</span></label>
+        <div class="feeling-group">
+          <div class="feeling-chip">
+            <input type="radio" name="nivel_tec" id="tec1" value="Nenhum, preciso de algo muito visual e simples" />
+            <label for="tec1">Nenhum, preciso de algo muito visual e simples (arrastar e soltar)</label>
+          </div>
+          <div class="feeling-chip">
+            <input type="radio" name="nivel_tec" id="tec2" value="Intermediário, já sei mexer no Canva e me viro bem" />
+            <label for="tec2">Intermediário, já sei mexer no Canva e me viro bem</label>
+          </div>
+          <div class="feeling-chip">
+            <input type="radio" name="nivel_tec" id="tec3" value="Avançado, gosto de testar ferramentas e código/IA" />
+            <label for="tec3">Avançado, gosto de testar ferramentas novas e não tenho medo de códigos ou IA</label>
+          </div>
+        </div>
+        <div class="field-error" id="e-nivel_tec">Selecione o seu nível de facilidade.</div>
+      </div>
+
+      <div class="field">
+        <label>Qual é o seu objetivo principal ao criar uma Landing Page? <span>*</span><br><small
+            style="font-weight:400;color:var(--muted);">Pode marcar mais de uma opção.</small></label>
+        <div class="chip-group" style="margin-top:6px">
+          <div class="chip"><input type="checkbox" name="objetivo" id="obj1"
+              value="Captar contatos (Leads/WhatsApp)" /><label for="obj1">Captar contatos (Leads/WhatsApp)</label>
+          </div>
+          <div class="chip"><input type="checkbox" name="objetivo" id="obj2"
+              value="Vender um produto ou serviço diretamente" /><label for="obj2">Vender um produto/serviço</label>
+          </div>
+          <div class="chip"><input type="checkbox" name="objetivo" id="obj3"
+              value="Criar um portfólio profissional" /><label for="obj3">Criar um portfólio</label></div>
+          <div class="chip"><input type="checkbox" name="objetivo" id="obj4"
+              value="Testar uma ideia nova no mercado" /><label for="obj4">Testar uma ideia nova</label></div>
+        </div>
+        <div class="field-error" id="e-objetivo">Selecione pelo menos um objetivo.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="goTo(1)"><span class="btn-icon">←</span> Voltar</button>
+        <button class="btn btn-primary" onclick="goTo(3)">Continuar <span class="btn-icon">→</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Ferramentas e Dores -->
+    <div class="step-card" id="step3">
+      <div class="step-label">Parte 3 de 4</div>
+      <div class="step-title">Ferramentas e Dores</div>
+      <div class="step-desc">Descubra o que você já tentou e qual é a sua principal trava hoje.</div>
+
+      <div class="field">
+        <label>Você já usou ou tentou usar alguma destas ferramentas para criar páginas ou designs?
+          <span>*</span><br><small style="font-weight:400;color:var(--muted);">Pode marcar mais de uma
+            opção.</small></label>
+        <div class="chip-group" style="margin-top:6px">
+          <div class="chip"><input type="checkbox" name="ferramentas" id="fer1" value="Canva" /><label
+              for="fer1">Canva</label></div>
+          <div class="chip"><input type="checkbox" name="ferramentas" id="fer2"
+              value="WordPress / Elementor / Wix" /><label for="fer2">WordPress / Elementor / Wix</label></div>
+          <div class="chip"><input type="checkbox" name="ferramentas" id="fer3"
+              value="Ferramentas de IA (Lovable, Framer AI, etc)" /><label for="fer3">Ferramentas de IA (Lovable,
+              etc)</label></div>
+          <div class="chip"><input type="checkbox" name="ferramentas" id="fer4" value="Código (HTML/CSS)" /><label
+              for="fer4">Código (HTML/CSS)</label></div>
+        </div>
+        <div class="field-error" id="e-ferramentas">Selecione pelo menos uma ferramenta.</div>
+      </div>
+
+      <div class="field">
+        <label for="obstaculo">Qual é o seu maior obstáculo para ter uma landing page incrível hoje? Seja honesto.
+          <span>*</span></label>
+        <textarea id="obstaculo"
+          placeholder="Ex: Acho muito caro contratar alguém, acho as ferramentas difíceis, não sei escrever o texto da página..."></textarea>
+        <div class="field-error" id="e-obstaculo">Compartilhe o seu maior obstáculo.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="goTo(2)"><span class="btn-icon">←</span> Voltar</button>
+        <button class="btn btn-primary" onclick="goTo(4)">Continuar <span class="btn-icon">→</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Expectativas -->
+    <div class="step-card" id="step4">
+      <div class="step-label">Parte 4 de 4</div>
+      <div class="step-title">Expectativas</div>
+      <div class="step-desc">Essas respostas são o coração do que vamos preparar para você.</div>
+
+      <div class="field">
+        <label for="expectativa">O que você espera sair sabendo ao final dessa aula de Landing Pages?
+          <span>*</span></label>
+        <textarea id="expectativa"
+          placeholder="Ex: Quero saber qual a melhor ferramenta para o meu caso, quero aprender a publicar minha página de graça..."></textarea>
+        <div class="field-error" id="e-expectativa">Conte o que você espera aprender.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="goTo(3)"><span class="btn-icon">←</span> Voltar</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">
+          Confirmar inscrição <span class="btn-icon">✦</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎯</div>
+      <h2>Inscrição confirmada!</h2>
+      <p>
+        <strong>Nos vemos dia 28 de junho as 09h, ao vivo.</strong><br><br>
+        Fique de olho no seu WhatsApp — enviaremos o link de acesso por lá.<br><br>
+        Obrigado por dedicar esse tempo. Vamos preparar uma aula feita sob medida para você.
+      </p>
+    </div>
+
+    <div class="footer">
+      S-LAB — Laboratório de Desenvolvimento Profissional em Saúde ✦ Criação de Landing Pages
+    </div>
+
+  </div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTT8yQxpYzTq4tchBlk38YR25agMPaL_HF6pYmp_4K-D9vT71OJq49HcR8Pb5iprXxCg/exec';
+
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    function updateProgress(step) {
+      for (let i = 1; i <= totalSteps; i++) {
+        const ps = document.getElementById('ps' + i);
+        ps.classList.remove('active', 'done');
+        if (i < step) ps.classList.add('done');
+        if (i === step) ps.classList.add('active');
+      }
+      for (let i = 1; i < totalSteps; i++) {
+        const pl = document.getElementById('pl' + i);
+        pl.classList.toggle('filled', i < step);
+      }
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+      const card = document.getElementById('step' + n);
+      if (card) {
+        card.classList.add('active');
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      updateProgress(n);
+      currentStep = n;
+    }
+
+    function val(id, check) {
+      const el = document.getElementById(id);
+      const err = document.getElementById('e-' + id);
+      const ok = check(el);
+      el.classList.toggle('error', !ok);
+      if (err) err.classList.toggle('show', !ok);
+      return ok;
+    }
+
+    function radioSelected(name) {
+      return !!document.querySelector(`input[name="${name}"]:checked`);
+    }
+
+    function valRadio(name) {
+      const err = document.getElementById('e-' + name);
+      const ok = radioSelected(name);
+      if (err) err.classList.toggle('show', !ok);
+      return ok;
+    }
+
+    function getChecked(name) {
+      return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
+        .map(el => el.value);
+    }
+
+    const notEmpty = el => el.value.trim().length > 0;
+    const validEmail = el => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+
+    function validateStep(n) {
+      if (n === 1) {
+        const a = val('nome', notEmpty);
+        const b = val('whatsapp', notEmpty);
+        const c = val('email', validEmail);
+        const d = valRadio('idade');
+        const e = valRadio('sexo');
+        const f = val('profissao', notEmpty);
+        return a && b && c && d && e && f;
+      }
+      if (n === 2) {
+        const a = valRadio('tem_site');
+        const b = valRadio('nivel_tec');
+        const err = document.getElementById('e-objetivo');
+        const c = getChecked('objetivo').length > 0;
+        if (err) err.classList.toggle('show', !c);
+        return a && b && c;
+      }
+      if (n === 3) {
+        const err = document.getElementById('e-ferramentas');
+        const a = getChecked('ferramentas').length > 0;
+        if (err) err.classList.toggle('show', !a);
+        const b = val('obstaculo', notEmpty);
+        return a && b;
+      }
+      if (n === 4) {
+        const a = val('expectativa', notEmpty);
+        return a;
+      }
+      return true;
+    }
+
+    function goTo(n) {
+      if (n > currentStep && !validateStep(currentStep)) return;
+      showStep(n);
+    }
+
+    async function submitForm() {
+      if (!validateStep(4)) return;
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      const getRadio = name => {
+        const el = document.querySelector(`input[name="${name}"]:checked`);
+        return el ? el.value : '';
+      };
+
+      const payload = {
+        timestamp: new Date().toLocaleString('pt-BR'),
+        nome: document.getElementById('nome').value.trim(),
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        idade: getRadio('idade'),
+        sexo: getRadio('sexo'),
+        profissao: document.getElementById('profissao').value.trim(),
+        tem_site: getRadio('tem_site'),
+        nivel_tec: getRadio('nivel_tec'),
+        objetivo: getChecked('objetivo').join(', '),
+        ferramentas: getChecked('ferramentas').join(', '),
+        obstaculo: document.getElementById('obstaculo').value.trim(),
+        expectativa: document.getElementById('expectativa').value.trim(),
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: new URLSearchParams(payload),
+        });
+        document.getElementById('progressWrap').style.display = 'none';
+        document.querySelectorAll('.step-card').forEach(c => c.style.display = 'none');
+        document.getElementById('successScreen').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = 'Confirmar inscrição <span class="btn-icon">✦</span>';
+        alert('Ops! Algo deu errado. Tente novamente.');
+      }
+    }
+  </script>
+</body>
+
+</html>
